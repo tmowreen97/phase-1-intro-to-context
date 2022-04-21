@@ -63,6 +63,7 @@ function allWagesFor (employeeRecObj){
     console.log(wages)
     sum+=wages
   }
+  console.log (sum)
   return sum
 }
 
