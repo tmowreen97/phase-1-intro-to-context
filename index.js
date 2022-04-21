@@ -1,22 +1,4 @@
 // Your code here
-
-// const employeeInfo ={
-//   firstName: '',
-//   familyName: '',
-//   title: '',
-//   payPerHour: '',
-//   timeInEvents: [],
-//   timeOutEvents: [],
-// }
-// function createEmployeeRecord(array){
-//   employeeInfo.firstName = array[0]
-//   employeeInfo.familyName = array[1]
-//   employeeInfo.title = array[2]
-//   employeeInfo.payPerHour = array[3]
-
-//   return employeeInfo
-// }
-
 function createEmployeeRecord(array){
   const employeeInfo ={
     firstName: array[0],
@@ -34,37 +16,71 @@ function createEmployeeRecords (array){
 }
 
 function createTimeInEvent(employeeRecObj, date){
-  var hour
-  if (date.length === 15){
-    hour = date.slice(11,13)
-  } else {
-    hour = date.slice(11,12)
-  };
-  const timeInObj = [
+  const timeInObj =
     {
       type: "TimeIn",
-      hour: `${hour}`,
-      date: date.slice(0,10),
+      hour: parseInt(date.split(' ')[1]),
+      date: date.split(' ')[0],
     }
-  ]
-  employeeRecObj.timeInEvents = timeInObj
+  employeeRecObj.timeInEvents.push(timeInObj)
   return employeeRecObj
 
 }
 
+function createTimeOutEvent(employeeRecObj, date){
+  const timeOutObj = 
+    {
+      type: "TimeOut",
+      hour: parseInt(date.split(' ')[1]),
+      date: date.split(' ')[0],
+    }
+  employeeRecObj.timeOutEvents.push(timeOutObj)
+  return employeeRecObj
 
-// function createTimeOutEvent(employeeRecObj, date){
-//   const timeOutObj = [
-//     {
-//       type: "TimeOut",
-//       hour: date.slice(11,13),
-//       date: date.slice(0,10),
-//     }
-//   ]
-//   employeeRecObj.timeOutEvents = timeOutObj
-//   return employeeRecObj
+}
 
+function hoursWorkedOnDate(employeeRecObj, date){
+  const timeIn= employeeRecObj.timeInEvents[0].hour.toString()
+  const timeOut = employeeRecObj.timeOutEvents[0].hour.toString()
+  if (date == employeeRecObj.timeInEvents[0].date){
+    const diff = (timeOut-timeIn).toString()
+    return parseInt(diff.slice(0, diff.length-2))
+  }
+}
+
+function wagesEarnedOnDate(employeeRecObj, date){
+  const hoursWorked = hoursWorkedOnDate(employeeRecObj, date)
+  const payOwed = (employeeRecObj.payPerHour)*hoursWorked
+  return (payOwed)
+}
+
+function allWagesFor (employeeRecObj){
+  var sum=0
+  for (let i=0; i<employeeRecObj.timeInEvents.length; i++){
+    let date = employeeRecObj.timeInEvents[i].date
+    console.log(date)
+    const wages = (wagesEarnedOnDate(employeeRecObj,date))
+    console.log(wages)
+    sum+=wages
+  }
+  return sum
+}
+
+// function allWagesFor(employeeRecObj){
+//   let dates = []
+//   for (let i=0; i<employeeRecObj.timeInEvents.length;i++){
+//     dates.push(employeeRecObj.timeInEvents[i].date)
+//   }
+//   console.log(dates)
+//   var sum =0
+//   for (const date in dates){
+//     sum += (wagesEarnedOnDate(employeeRecObj,date))
+//     console.log (sum)
+//   }
+//   return sum
 // }
+
+
 const example = ['Tasreen', 'Mowreen', 'Ms.', 18]
 const date = "2022-04-20 1440"
 console.log (createTimeInEvent(createEmployeeRecord(example), date))
@@ -74,4 +90,10 @@ console.log (createTimeInEvent(createEmployeeRecord(example), date))
 
 //PseudoCode
 // first we convert array into an object
-// we want the values to coincide with the values in the array
+// we want the values to coincide with the values in the array  // var sum =0
+  // for (let i=0; i++) {
+  //   console.log(wagesEarnedOnDate(employeeRecObj, (employeeRecObj.timeInEvents[i].date)));
+    // sum+= wages
+  
+  // console.log(sum)
+  // return sum
